@@ -54,7 +54,7 @@
               ],
               "outputHashing": "all",
               "stylePreprocessorOptions": {
-                "includePaths": ["src/renderer/styles"]
+                "includePaths": ["src/styles"]
               }
             },
             "development": {
@@ -65,7 +65,7 @@
               "sourceMap": true,
               "namedChunks": true,
               "stylePreprocessorOptions": {
-                "includePaths": ["src/renderer/styles"]
+                "includePaths": ["src/styles"]
               }
             }
           },
