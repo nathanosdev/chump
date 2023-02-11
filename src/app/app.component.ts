@@ -7,6 +7,7 @@ import {
   CanisterHttpRequestFormComponent,
   CanisterHttpRequestDto,
 } from "./core";
+import { ButtonComponent } from "./ui";
 
 export const DEFAULT_GATEWAY = "https://ic0.app";
 export const DEFAULT_CANISTER_ID = "qoctq-giaaa-aaaaa-aaaea-cai";
@@ -20,18 +21,19 @@ export const DEFAULT_PATH = "/";
     ReactiveFormsModule,
     LayoutComponent,
     CanisterHttpRequestFormComponent,
+    ButtonComponent,
   ],
   templateUrl: "./app.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   public canisterHttpRequestDto: CanisterHttpRequestDto = {
     gateway: DEFAULT_GATEWAY,
     canisterId: DEFAULT_CANISTER_ID,
     path: DEFAULT_PATH,
   };
 
-  public ngOnInit(): void {
+  public onSubmitCanisterHttpRequest(): void {
     if (this.canisterHttpRequestDto) {
       canisterHttpRequest(this.canisterHttpRequestDto).then((result) => {
         console.log("Canister request complete", result);
