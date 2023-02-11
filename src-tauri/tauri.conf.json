@@ -62,7 +62,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "ic-certificate-explorer",
+        "title": "IC Certificate Explorer",
         "width": 800
       }
     ]

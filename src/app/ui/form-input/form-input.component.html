@@ -1,0 +1,9 @@
+<input
+  type="text"
+  [id]="id ?? ''"
+  [value]="value"
+  (change)="onChange($event)"
+  (blur)="onBlur()"
+  [disabled]="isDisabled"
+  class="form-control"
+/>
