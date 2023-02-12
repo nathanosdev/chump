@@ -1472,8 +1472,6 @@ dependencies = [
 [[package]]
 name = "ic-agent"
 version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee53ec42421e7bfedcba07de8f27a295b822f0db69c596dc5edef5d3f979fa18"
 dependencies = [
  "async-trait",
  "backoff",
@@ -1513,10 +1511,15 @@ name = "ic-certificate-explorer"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "base64 0.21.0",
  "flate2",
+ "hex",
  "ic-agent",
+ "ic-certification",
  "ic-utils",
+ "lazy-regex",
  "serde",
+ "serde_cbor",
  "serde_json",
  "tauri",
  "tauri-build",
@@ -1525,8 +1528,6 @@ dependencies = [
 [[package]]
 name = "ic-certification"
 version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b201d11ba96f09548ec09409beb50cf845828f058f5c6a17c285729eab3a77d3"
 dependencies = [
  "hex",
  "serde",
@@ -1537,8 +1538,6 @@ dependencies = [
 [[package]]
 name = "ic-utils"
 version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b2cbf03564a28c2712fff08c3b2252da47cd95d0f42e97d08e8692cbd72536b"
 dependencies = [
  "async-trait",
  "candid",
@@ -1796,6 +1795,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bcf796c978e9b4d983414f4caedc9273aa33ee214c5b887bd55fde84c85d2dc4"
 dependencies = [
  "regex",
+]
+
+[[package]]
+name = "lazy-regex"
+version = "2.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a505da2f89befd87ab425d252795f0f285e100b43e7d22d29528df3d9a576793"
+dependencies = [
+ "lazy-regex-proc_macros",
+ "once_cell",
+ "regex",
+]
+
+[[package]]
+name = "lazy-regex-proc_macros"
+version = "2.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8edfc11b8f56ce85e207e62ea21557cfa09bb24a8f6b04ae181b086ff8611c22"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "regex",
+ "syn",
 ]
 
 [[package]]

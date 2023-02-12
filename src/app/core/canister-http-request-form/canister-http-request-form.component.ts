@@ -69,8 +69,6 @@ export class CanisterHttpRequestFormComponent implements OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap(() => {
-          console.log("Form value changed", this.formGroup.getRawValue());
-
           this.canisterHttpRequestChange.emit(this.formGroup.getRawValue());
         })
       )

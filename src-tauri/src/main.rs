@@ -4,6 +4,10 @@
 )]
 
 mod agent;
+mod body;
+mod certificate;
+mod encoding;
+mod hash_tree;
 mod commands;
 
 use crate::commands::canister_http_request;

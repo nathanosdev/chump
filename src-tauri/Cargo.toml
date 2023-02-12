@@ -16,10 +16,15 @@ tauri-build = { version = "1.2", features = [] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.2", features = ["shell-open"] }
-ic-agent = "0.23.0"
-ic-utils = "0.23.0"
+ic-agent = { path = "../../agent-rs/ic-agent" }
+ic-certification = { path = "../../agent-rs/ic-certification" }
+ic-utils = { path = "../../agent-rs/ic-utils" }
 anyhow = "1.0.69"
 flate2 = "1.0.25"
+base64 = "0.21.0"
+serde_cbor = "0.11.2"
+lazy-regex = "2.4.1"
+hex = "0.4.3"
 
 [features]
 # by default Tauri runs in production mode

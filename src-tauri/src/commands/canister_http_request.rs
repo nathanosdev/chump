@@ -1,7 +1,3 @@
-use std::io::Read;
-
-use anyhow::Result;
-use flate2::read::{DeflateDecoder, GzDecoder};
 use ic_agent::export::Principal;
 use ic_utils::{
     call::SyncCall,
@@ -11,7 +7,11 @@ use ic_utils::{
     },
 };
 
-use crate::agent::create_agent;
+use crate::{
+    agent::create_agent,
+    certificate::{decode_certificate_header, PrettyCertificate},
+};
+use crate::{body::decode_body, hash_tree::PrettyHashTree};
 
 #[derive(Debug, serde::Serialize)]
 pub struct CanisterHttpResponseDto {
@@ -23,10 +23,12 @@ pub struct CanisterHttpResponseDto {
 #[derive(Debug, serde::Serialize)]
 pub struct CanisterHttpRequestDto {
     response: CanisterHttpResponseDto,
+    certificate: Option<PrettyCertificate>,
+    hash_tree: Option<PrettyHashTree>,
 }
 
 #[tauri::command]
-pub async fn canister_http_request(
+pub async fn canister_http_request<'a>(
     gateway: &str,
     canister_id: &str,
     path: &str,
@@ -41,31 +43,63 @@ pub async fn canister_http_request(
         .await
         .unwrap();
 
+    let parsed_headers = parse_headers(&response);
+
+    let parsed_certificate_header = parsed_headers
+        .certificate
+        .as_ref()
+        .map(|certificate_header| decode_certificate_header(certificate_header));
+
+    let certificate = parsed_certificate_header
+        .as_ref()
+        .and_then(|(certificate, _)| {
+            certificate
+                .as_ref()
+                .map(|certificate| PrettyCertificate::from(certificate.clone()))
+        });
+    let hash_tree = parsed_certificate_header
+        .as_ref()
+        .and_then(|(_, hash_tree)| {
+            hash_tree
+                .as_ref()
+                .map(|hash_tree| PrettyHashTree::from(hash_tree.clone()))
+        });
+
     Ok(CanisterHttpRequestDto {
-        response: map_response(response),
+        response: map_response(&response, &parsed_headers),
+        certificate,
+        hash_tree,
     })
 }
 
 #[derive(Debug)]
 struct ParsedHeaders {
     encoding: Option<String>,
+    certificate: Option<String>,
 }
 
 fn parse_headers(response: &HttpResponse) -> ParsedHeaders {
     let mut encoding: Option<String> = None;
+    let mut certificate: Option<String> = None;
 
     for HeaderField(key, value) in &response.headers {
         if key.eq_ignore_ascii_case("Content-Encoding") {
-            encoding = Some(value.to_owned().to_string())
+            encoding = Some(value.to_owned().to_string());
+        } else if key.eq_ignore_ascii_case("IC-Certificate") {
+            certificate = Some(value.to_owned().to_string());
         }
     }
 
-    ParsedHeaders { encoding }
+    ParsedHeaders {
+        encoding,
+        certificate,
+    }
 }
 
-fn map_response(response: HttpResponse) -> CanisterHttpResponseDto {
-    let parsed_headers = parse_headers(&response);
-
+fn map_response(
+    response: &HttpResponse,
+    parsed_headers: &ParsedHeaders,
+) -> CanisterHttpResponseDto {
     let status_code = response.status_code;
     let headers = response
         .headers
@@ -77,7 +111,7 @@ fn map_response(response: HttpResponse) -> CanisterHttpResponseDto {
             (String::from(key), String::from(value))
         })
         .collect::<Vec<(String, String)>>();
-    let body = decode_body(&response.body, parsed_headers.encoding).unwrap();
+    let body = decode_body(&response.body, &parsed_headers.encoding).unwrap();
     let body = String::from_utf8(body).unwrap();
 
     CanisterHttpResponseDto {
@@ -85,37 +119,4 @@ fn map_response(response: HttpResponse) -> CanisterHttpResponseDto {
         headers,
         body,
     }
-}
-
-// The limit of a buffer we should decompress ~10mb.
-const MAX_CHUNK_SIZE_TO_DECOMPRESS: usize = 1024;
-const MAX_CHUNKS_TO_DECOMPRESS: u64 = 10_240;
-
-fn decode_body(body: &[u8], encoding: Option<String>) -> Option<Vec<u8>> {
-    match encoding.as_deref() {
-        Some("gzip") => body_from_decoder(GzDecoder::new(body)),
-        Some("deflate") => body_from_decoder(DeflateDecoder::new(body)),
-        _ => Some(body.to_vec()),
-    }
-}
-
-fn body_from_decoder<D: Read>(mut decoder: D) -> Option<Vec<u8>> {
-    let mut decoded = Vec::new();
-    let mut buffer = [0u8; MAX_CHUNK_SIZE_TO_DECOMPRESS];
-
-    for _ in 0..MAX_CHUNKS_TO_DECOMPRESS {
-        let bytes = decoder.read(&mut buffer).ok()?;
-
-        if bytes == 0 {
-            return Some(decoded);
-        }
-
-        decoded.extend_from_slice(&buffer[..bytes]);
-    }
-
-    if decoder.bytes().next().is_some() {
-        return None;
-    }
-
-    Some(decoded)
 }
