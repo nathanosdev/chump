@@ -1,0 +1,5 @@
+@import "common";
+
+.footer {
+  margin-top: calc(#{$grid-gutter-width} * 2);
+}

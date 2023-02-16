@@ -6,6 +6,7 @@ import {
   OnInit,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { coerceBooleanProperty } from "@angular/cdk/coercion";
 
 export type ButtonTheme =
   | "primary"
@@ -31,6 +32,27 @@ export class ButtonComponent implements OnInit, OnChanges {
 
   @Input()
   public theme?: ButtonTheme;
+
+  @Input()
+  public set icon(icon: any) {
+    this._icon = coerceBooleanProperty(icon);
+  }
+
+  public get icon(): boolean {
+    return this._icon ?? false;
+  }
+
+  @Input()
+  public set disabled(disabled: any) {
+    this._disabled = coerceBooleanProperty(disabled);
+  }
+
+  public get disabled(): boolean {
+    return this._disabled ?? false;
+  }
+
+  private _icon?: boolean;
+  private _disabled?: boolean;
 
   public ngOnInit(): void {
     this.setCssClasses();

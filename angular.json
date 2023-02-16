@@ -6,7 +6,7 @@
     "analytics": false
   },
   "projects": {
-    "ic-certificate-explorer": {
+    "chump": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -75,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ic-certificate-explorer:build:production"
+              "browserTarget": "chump:build:production"
             },
             "development": {
-              "browserTarget": "ic-certificate-explorer:build:development"
+              "browserTarget": "chump:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -86,7 +86,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ic-certificate-explorer:build"
+            "browserTarget": "chump:build"
           }
         }
       }

@@ -1,4 +1,15 @@
 import { invoke } from "@tauri-apps/api/tauri";
+import {
+  CanisterHttpResponseDto,
+  CertificateDto,
+  DelegationDto,
+} from "./canister-http-response-dto.types";
+import {
+  CanisterHttpResponse,
+  Certificate,
+  Delegation,
+} from "./canister-http-response.types";
+import { mapHashTree } from "./canister-http-response.utils";
 
 export interface CanisterHttpRequestDto {
   gateway: string;
@@ -6,63 +17,68 @@ export interface CanisterHttpRequestDto {
   path: string;
 }
 
-export interface CanisterHttpResponseDto {
-  response: {
-    status_code: number;
-    headers: [string, string][];
-    body: string;
+function mapDelegation(
+  delegation: DelegationDto | null
+): Delegation | undefined {
+  if (!delegation) {
+    return;
+  }
+
+  const certificate = mapHashTree(delegation.certificate);
+
+  if (!certificate) {
+    // shouldn't happen
+    return;
+  }
+
+  return {
+    certificate,
+    subnetId: delegation.subnet_id,
   };
-  hash_tree: HashTree | null;
-  certificate: Certificate | null;
 }
 
-export type HashTreeNode =
-  | {
-      Empty: {};
-    }
-  | {
-      Fork: {
-        left: HashTreeNode;
-        right: HashTreeNode;
-      };
-    }
-  | {
-      Labeled: {
-        label: string;
-        child: HashTreeNode;
-      };
-    }
-  | {
-      Leaf: {
-        content: string;
-      };
-    }
-  | {
-      Pruned: {
-        content: string;
-      };
-    };
+function mapCertificate(
+  certificate: CertificateDto | null
+): Certificate | undefined {
+  if (!certificate) {
+    return;
+  }
 
-export interface HashTree {
-  digest: string;
-  root: HashTreeNode;
+  const tree = mapHashTree(certificate.tree);
+  if (!tree) {
+    // shouldn't happen
+    return;
+  }
+
+  return {
+    signature: certificate.signature,
+    tree,
+    delegation: mapDelegation(certificate.delegation),
+  };
 }
 
-export interface Certificate {
-  tree: HashTree;
-  signature: string;
-  delegation: Delegation | null;
-}
-
-export interface Delegation {
-  subnet_id: number[];
-  certificate: HashTree;
+function mapResponse(
+  responseDto: CanisterHttpResponseDto
+): CanisterHttpResponse {
+  return {
+    response: {
+      ...responseDto.response,
+      statusCode: responseDto.response.status_code,
+    },
+    hashTree: mapHashTree(responseDto.hash_tree),
+    certificate: mapCertificate(responseDto.certificate),
+  };
 }
 
 export async function canisterHttpRequest(
   request: CanisterHttpRequestDto
-): Promise<CanisterHttpResponseDto> {
-  return await invoke<CanisterHttpResponseDto>("canister_http_request", {
-    ...request,
-  });
+): Promise<CanisterHttpResponse> {
+  const response = await invoke<CanisterHttpResponseDto>(
+    "canister_http_request",
+    {
+      ...request,
+    }
+  );
+
+  return mapResponse(response);
 }

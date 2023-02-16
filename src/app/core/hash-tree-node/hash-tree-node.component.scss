@@ -1,0 +1,50 @@
+@import "common";
+
+$connector-color: var(--#{$prefix}body-color);
+$connector-width: 2.4px;
+$connector-left-margin: 12px;
+$connector-right-padding: 28px;
+$connector-label-spacing: 8px;
+
+.node .node {
+  position: relative;
+  display: block;
+  margin-left: $connector-left-margin;
+  padding-left: $connector-right-padding;
+
+  &::after,
+  .node-label::after {
+    content: "";
+    display: block;
+    position: absolute;
+    background-color: $connector-color;
+  }
+
+  &::after {
+    top: 0;
+    left: 0;
+    width: $connector-width;
+    height: 100%;
+  }
+
+  .node-label {
+    position: relative;
+  
+    &::after {
+      top: 0;
+      bottom: 0;
+      margin: auto 0;
+      left: -$connector-right-padding;
+      width: $connector-right-padding - $connector-label-spacing;
+      height: $connector-width;
+    }
+  }
+
+  &:last-child::after {
+    height: 17px;
+  }
+}
+
+.node-collapsed {
+  display: none;
+}

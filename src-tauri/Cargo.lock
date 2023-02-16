@@ -411,6 +411,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "chump"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "base64 0.21.0",
+ "flate2",
+ "hex",
+ "ic-agent",
+ "ic-certification",
+ "ic-utils",
+ "lazy-regex",
+ "serde",
+ "serde_cbor",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+]
+
+[[package]]
 name = "cocoa"
 version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1504,25 +1523,6 @@ dependencies = [
  "thiserror",
  "tokio",
  "url",
-]
-
-[[package]]
-name = "ic-certificate-explorer"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "base64 0.21.0",
- "flate2",
- "hex",
- "ic-agent",
- "ic-certification",
- "ic-utils",
- "lazy-regex",
- "serde",
- "serde_cbor",
- "serde_json",
- "tauri",
- "tauri-build",
 ]
 
 [[package]]

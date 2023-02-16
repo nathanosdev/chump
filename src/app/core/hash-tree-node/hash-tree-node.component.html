@@ -1,0 +1,39 @@
+<cdk-tree [dataSource]="dataSource$" [treeControl]="treeControl">
+  <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="node">
+    <div class="node-label">
+      <ng-container
+        *ngTemplateOutlet="nodeLabel; context: { $implicit: node }"
+      ></ng-container>
+    </div>
+  </cdk-nested-tree-node>
+
+  <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild" class="node">
+    <div class="node-label">
+      <ng-container
+        *ngTemplateOutlet="nodeLabel; context: { $implicit: node }"
+      ></ng-container>
+
+      <app-button icon cdkTreeNodeToggle>
+        <i [ngClass]="getToggleClass(node)"></i>
+      </app-button>
+    </div>
+
+    <div [ngClass]="getNodeModifierClass(node)">
+      <div [class.node-collapsed]="!treeControl.isExpanded(node)">
+        <ng-container cdkTreeNodeOutlet></ng-container>
+      </div>
+    </div>
+  </cdk-nested-tree-node>
+</cdk-tree>
+
+<ng-template #nodeLabel let-node>
+  <span *ngIf="node.type === 'empty'">Empty</span>
+
+  <span *ngIf="node.type === 'fork'">Fork</span>
+
+  <span *ngIf="node.type === 'labeled'"> Labeled({{ node.label }}) </span>
+
+  <span *ngIf="node.type === 'leaf'"> Leaf({{ node.content }}) </span>
+
+  <span *ngIf="node.type === 'pruned'"> Pruned({{ node.content }}) </span>
+</ng-template>

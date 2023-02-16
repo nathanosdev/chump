@@ -1,8 +1,33 @@
 <app-layout>
+  <h2 class="h4">Canister HTTP Request</h2>
   <app-canister-http-request-form
     [(canisterHttpRequest)]="canisterHttpRequestDto"
   ></app-canister-http-request-form>
 
   <br />
   <app-button (click)="onSubmitCanisterHttpRequest()">Submit</app-button>
+  <br />
+  <br />
+
+  <ng-container *ngIf="canisterHttpResponse">
+    <h2 class="h4">Canister HTTP Response</h2>
+
+    <ng-container *ngIf="canisterHttpResponse.certificate as certificate">
+      <h3 class="h5">Certificate</h3>
+
+      <p>Signature: {{ certificate.signature }}</p>
+
+      <h4 class="h6">Certificate Tree</h4>
+      <p>Digest: {{ certificate.tree.digest }}</p>
+      <app-hash-tree-node
+        [hashTreeNode]="certificate.tree.root"
+      ></app-hash-tree-node>
+    </ng-container>
+
+    <ng-container *ngIf="canisterHttpResponse.hashTree as hashTree">
+      <h3 class="h5">Hash Tree</h3>
+      <p>Digest: {{ hashTree.digest }}</p>
+      <app-hash-tree-node [hashTreeNode]="hashTree.root"></app-hash-tree-node>
+    </ng-container>
+  </ng-container>
 </app-layout>
