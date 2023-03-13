@@ -11,9 +11,11 @@ $connector-label-spacing: 8px;
   display: block;
   margin-left: $connector-left-margin;
   padding-left: $connector-right-padding;
+  line-height: 2;
 
   &::after,
-  .node-label::after {
+  .node-label::after,
+  .node-label::before {
     content: "";
     display: block;
     position: absolute;
@@ -27,8 +29,19 @@ $connector-label-spacing: 8px;
     height: 100%;
   }
 
+  &:last-child::after {
+    display: none;
+  }
+
   .node-label {
     position: relative;
+
+    &::before {
+      top: 0;
+      left: -$connector-right-padding;
+      bottom: 50%;
+      width: $connector-width;
+    }
   
     &::after {
       top: 0;
@@ -38,10 +51,6 @@ $connector-label-spacing: 8px;
       width: $connector-right-padding - $connector-label-spacing;
       height: $connector-width;
     }
-  }
-
-  &:last-child::after {
-    height: 17px;
   }
 }
 
