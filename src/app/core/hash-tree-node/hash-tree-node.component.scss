@@ -1,3 +1,4 @@
+@use "sass:map";
 @import "common";
 
 $connector-color: var(--#{$prefix}body-color);
@@ -42,7 +43,7 @@ $connector-label-spacing: 8px;
       bottom: 50%;
       width: $connector-width;
     }
-  
+
     &::after {
       top: 0;
       bottom: 0;
@@ -56,4 +57,9 @@ $connector-label-spacing: 8px;
 
 .node-collapsed {
   display: none;
+}
+
+.node-actions {
+  display: inline-block;
+  margin-left: map.get($spacers, 3);
 }

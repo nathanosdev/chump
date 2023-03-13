@@ -13,9 +13,15 @@
         *ngTemplateOutlet="nodeLabel; context: { $implicit: node }"
       ></ng-container>
 
-      <app-button icon cdkTreeNodeToggle>
-        <i [ngClass]="getToggleClass(node)"></i>
-      </app-button>
+      <div class="node-actions">
+        <app-button icon cdkTreeNodeToggle>
+          <i [ngClass]="getToggleClass(node)"></i>
+        </app-button>
+
+        <app-button icon (click)="toggleDescendants(node)">
+          <i [ngClass]="getToggleAllClass(node)"></i>
+        </app-button>
+      </div>
     </div>
 
     <div [ngClass]="getNodeModifierClass(node)">
@@ -31,9 +37,9 @@
 
   <span *ngIf="node.type === 'fork'">Fork</span>
 
-  <span *ngIf="node.type === 'labeled'"> Labeled({{ node.label }}) </span>
+  <span *ngIf="node.type === 'labeled'">Labeled({{ node.label }})</span>
 
-  <span *ngIf="node.type === 'leaf'"> Leaf({{ node.content }}) </span>
+  <span *ngIf="node.type === 'leaf'">Leaf({{ node.content }})</span>
 
-  <span *ngIf="node.type === 'pruned'"> Pruned({{ node.content }}) </span>
+  <span *ngIf="node.type === 'pruned'">Pruned({{ node.content }})</span>
 </ng-template>

@@ -71,4 +71,14 @@ export class HashTreeNodeComponent {
       ? "bi-chevron-down"
       : "bi-chevron-right";
   }
+
+  public getToggleAllClass(node: HashTreeNode): string {
+    return this.treeControl.isExpanded(node)
+      ? "bi-arrows-collapse"
+      : "bi-arrows-expand";
+  }
+
+  public toggleDescendants(node: HashTreeNode): void {
+    this.treeControl.toggleDescendants(node);
+  }
 }

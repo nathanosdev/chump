@@ -1491,6 +1491,7 @@ dependencies = [
 [[package]]
 name = "ic-agent"
 version = "0.23.0"
+source = "git+https://github.com/dfinity/agent-rs?rev=3d6777066b5d0407f832aab7dec2d7eeec4853b5#3d6777066b5d0407f832aab7dec2d7eeec4853b5"
 dependencies = [
  "async-trait",
  "backoff",
@@ -1528,6 +1529,7 @@ dependencies = [
 [[package]]
 name = "ic-certification"
 version = "0.23.0"
+source = "git+https://github.com/dfinity/agent-rs?rev=3d6777066b5d0407f832aab7dec2d7eeec4853b5#3d6777066b5d0407f832aab7dec2d7eeec4853b5"
 dependencies = [
  "hex",
  "serde",
@@ -1538,6 +1540,7 @@ dependencies = [
 [[package]]
 name = "ic-utils"
 version = "0.23.0"
+source = "git+https://github.com/dfinity/agent-rs?rev=3d6777066b5d0407f832aab7dec2d7eeec4853b5#3d6777066b5d0407f832aab7dec2d7eeec4853b5"
 dependencies = [
  "async-trait",
  "candid",

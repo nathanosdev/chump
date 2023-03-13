@@ -38,7 +38,7 @@ pub async fn canister_http_request<'a>(
     let canister = HttpRequestCanister::create(&agent, canister_id);
 
     let (response,) = canister
-        .http_request("get", path, [], &[])
+        .http_request("get", path, [], &[], None)
         .call()
         .await
         .unwrap();
